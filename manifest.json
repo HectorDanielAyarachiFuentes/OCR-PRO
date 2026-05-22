@@ -1,0 +1,71 @@
+{
+  "manifest_version": 3,
+  "name": "OCR Pro",
+  "version": "3.0.0",
+  "description": "Extensión OCR: hace clic en el ícono, selecciona el texto en pantalla y cópialo al instante.",
+  "author": "Hector Daniel Ayarachi Fuentes",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "notas-pro@extension",
+      "strict_min_version": "142.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+
+  "background": {
+    "scripts": ["js/background.js"],
+    "type": "module"
+  },
+
+  "action": {
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "default_title": "OCR Pro – Capturar texto"
+  },
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "OCR/dialog.html",
+        "OCR/message-dialog.html",
+        "OCR/config/config.json",
+        "OCR/styles/material.min.css",
+        "OCR/styles/cs.css",
+        "OCR/scripts/tesseract.esm.js",
+        "OCR/scripts/worker.min.js",
+        "OCR/scripts/tesseract-core-simd.wasm.js",
+        "OCR/scripts/tesseract-core-simd.wasm",
+        "OCR/tessdata/*",
+        "OCR/tessdata_best/*",
+        "OCR/images/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
