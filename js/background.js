@@ -6,6 +6,40 @@ browserAPI.action.onClicked.addListener((tab) => {
   handleBackgroundOCR(tab);
 });
 
+// Crear menú contextual
+browserAPI.runtime.onInstalled.addListener(() => {
+  browserAPI.contextMenus.create({
+    id: "open-notes",
+    title: "Ver notas guardadas (OCR Pro)",
+    contexts: ["all"]
+  });
+});
+
+// Manejar clics en el menú contextual
+browserAPI.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId === "open-notes") {
+    try {
+      if (browserAPI.sidebarAction && typeof browserAPI.sidebarAction.open === 'function') {
+        await browserAPI.sidebarAction.open();
+      } else if (browserAPI.sidePanel && typeof browserAPI.sidePanel.open === 'function') {
+        if (tab && tab.windowId) {
+          await browserAPI.sidePanel.open({ windowId: tab.windowId });
+        } else {
+          const [currentTab] = await browserAPI.tabs.query({ active: true, lastFocusedWindow: true });
+          if (currentTab) {
+            await browserAPI.sidePanel.open({ windowId: currentTab.windowId });
+          }
+        }
+      } else {
+        await browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
+      }
+    } catch (err) {
+      console.error("Error al abrir las notas desde el menú contextual:", err);
+      browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
+    }
+  }
+});
+
 // Escuchar mensajes del módulo OCR
 browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
