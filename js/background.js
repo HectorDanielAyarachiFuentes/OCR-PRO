@@ -120,8 +120,29 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.evt === 'open-app') {
-    browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
-    sendResponse({ success: true });
+    (async () => {
+      try {
+        if (browserAPI.sidebarAction && typeof browserAPI.sidebarAction.open === 'function') {
+          await browserAPI.sidebarAction.open();
+        } else if (browserAPI.sidePanel && typeof browserAPI.sidePanel.open === 'function') {
+          if (sender && sender.tab) {
+            await browserAPI.sidePanel.open({ windowId: sender.tab.windowId });
+          } else {
+            const [currentTab] = await browserAPI.tabs.query({ active: true, lastFocusedWindow: true });
+            if (currentTab) {
+              await browserAPI.sidePanel.open({ windowId: currentTab.windowId });
+            }
+          }
+        } else {
+          await browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
+        }
+        sendResponse({ success: true });
+      } catch (err) {
+        console.error("Error al abrir el panel lateral:", err);
+        browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
+        sendResponse({ success: false, error: err.message });
+      }
+    })();
     return true;
   }
 

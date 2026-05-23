@@ -41,6 +41,12 @@
     "scripting"
   ],
 
+  "sidebar_action": {
+    "default_title": "OCR Pro",
+    "default_icon": "icono_ocr.svg",
+    "default_panel": "popup.html"
+  },
+
   "host_permissions": [
     "<all_urls>"
   ],

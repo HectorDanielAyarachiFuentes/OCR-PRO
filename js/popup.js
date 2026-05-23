@@ -525,6 +525,13 @@ if (pinBtn) {
     if (browserAPI.sidebarAction && typeof browserAPI.sidebarAction.open === 'function') {
       browserAPI.sidebarAction.open();
       window.close();
+    } else if (browserAPI.sidePanel && typeof browserAPI.sidePanel.open === 'function') {
+      const tabs = await browserAPI.tabs.query({ active: true, lastFocusedWindow: true });
+      const currentTab = tabs[0];
+      if (currentTab) {
+        await browserAPI.sidePanel.open({ windowId: currentTab.windowId });
+      }
+      window.close();
     } else {
       await browserAPI.windows.create({ url: 'popup.html', type: 'popup', width: 450, height: 750 });
       window.close();
