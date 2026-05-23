@@ -1515,14 +1515,14 @@ if (typeof browser === "undefined") {
 			let isCopied = fireCopy(text);
 			if (isCopied) {
 				animatedText();
-				// Integración con Notas Pro: Guardar automáticamente al copiar
+				// Integración con OCR Pro: Guardar automáticamente al copiar
 				browser.runtime.sendMessage({ evt: 'saveOCRText', text: text });
 			}
 		} else {
 			let isCopied = fireCopy(text);
 			if (isCopied) {
 				animatedText();
-				// Integración con Notas Pro: Guardar automáticamente al copiar
+				// Integración con OCR Pro: Guardar automáticamente al copiar
 				browser.runtime.sendMessage({ evt: 'saveOCRText', text: text });
 			}
 		}

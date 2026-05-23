@@ -1,4 +1,5 @@
 import browserAPI from './browser-api.js';
+import { getNotes, saveNotes } from './storage-manager.js';
 
 // Al hacer clic en el ícono de la extensión, lanzar el OCR directamente
 browserAPI.action.onClicked.addListener((tab) => {
@@ -124,6 +125,20 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'autoSaveNote') {
+    autoSaveNote(message.content, message.title, message.url);
+    sendResponse({ success: true });
+    return true;
+  }
+
+  if (message.evt === 'saveOCRText') {
+    const title = sender.tab ? sender.tab.title : 'OCR';
+    const url = sender.tab ? sender.tab.url : '';
+    autoSaveNote(message.text, title, url);
+    sendResponse({ success: true });
+    return true;
+  }
+
   if (message.evt === 'checkDesktopCaptureSoftware') {
     sendResponse({ installed: false });
     return true;
@@ -132,6 +147,27 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Ignorar mensajes no manejados silenciosamente
   return false;
 });
+
+async function autoSaveNote(content, title, url) {
+  if (!content) return;
+  try {
+    const notes = await getNotes();
+    const now = Date.now();
+    const newNote = {
+      id: crypto.randomUUID(),
+      title: title ? `Copiado: ${title}` : 'Recorte rápido',
+      content: content + (url ? `\n\nFuente: ${url}` : ''),
+      createdAt: now,
+      updatedAt: now
+    };
+    notes.push(newNote);
+    await saveNotes(notes);
+    // Avisar al popup para que recargue la lista de notas
+    browserAPI.runtime.sendMessage({ action: 'notesUpdated' }).catch(() => {});
+  } catch (err) {
+    console.error('Error in autoSaveNote:', err);
+  }
+}
 
 // --- OCR Logic ---
 let isProcessingOCR = false;

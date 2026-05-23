@@ -699,6 +699,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else {
         status('No se encontró texto en la imagen.', 'info');
       }
+    } else if (msg.action === 'notesUpdated') {
+      renderNotes();
     }
   });
 });
