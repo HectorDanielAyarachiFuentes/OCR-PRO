@@ -492,11 +492,38 @@ if (importFileInput) {
 if (ocrBtn) {
   ocrBtn.addEventListener('click', async () => {
     try {
-      const tabs = await browserAPI.tabs.query({ active: true, lastFocusedWindow: true });
-      const tab = tabs[0];
+      let tabs = await browserAPI.tabs.query({ active: true, lastFocusedWindow: true });
+      let tab = tabs[0];
       
-      if (!tab || !tab.url || tab.url.startsWith('about:')) {
-        status('El navegador no permite el uso de OCR en esta página.', 'danger', 5000);
+      // Si la pestaña activa es de la propia extensión u otra página interna restringida,
+      // intentamos buscar una pestaña activa de una página web en cualquier ventana.
+      if (tab && tab.url && (
+          tab.url.startsWith('chrome-extension://') || 
+          tab.url.startsWith('moz-extension://') || 
+          tab.url.startsWith('chrome://') || 
+          tab.url.startsWith('edge://') || 
+          tab.url.startsWith('about:')
+      )) {
+        const allActiveTabs = await browserAPI.tabs.query({ active: true });
+        const webTab = allActiveTabs.find(t => t.url && 
+          !t.url.startsWith('chrome-extension://') && 
+          !t.url.startsWith('moz-extension://') && 
+          !t.url.startsWith('chrome://') && 
+          !t.url.startsWith('edge://') && 
+          !t.url.startsWith('about:')
+        );
+        if (webTab) {
+          tab = webTab;
+          // Hacer activa la pestaña web para que el usuario pueda verla e interactuar
+          await browserAPI.tabs.update(tab.id, { active: true });
+          if (tab.windowId) {
+            await browserAPI.windows.update(tab.windowId, { focused: true });
+          }
+        }
+      }
+
+      if (!tab || !tab.url || tab.url.startsWith('about:') || tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('chrome-extension://') || tab.url.startsWith('moz-extension://')) {
+        status('El navegador no permite el uso de OCR en esta página. Asegúrate de estar en una página web activa.', 'danger', 5000);
         return;
       }
 
@@ -510,7 +537,11 @@ if (ocrBtn) {
         status('Error: ' + response.error, 'danger', 5000);
         if (container) container.classList.remove('ocr-processing');
       } else {
-        setTimeout(() => window.close(), 2000);
+        // Solo cerramos si no estamos abiertos como una pestaña propiamente dicha
+        const currentTab = await browserAPI.tabs.getCurrent();
+        if (!currentTab) {
+          setTimeout(() => window.close(), 2000);
+        }
       }
     } catch (e) {
       status('Error: ' + e.message, 'danger', 5000);

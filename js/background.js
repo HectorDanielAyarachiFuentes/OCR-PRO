@@ -152,10 +152,19 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'performBackgroundOCR') {
+    handleBackgroundOCR(message.tab)
+      .then((res) => sendResponse(res))
+      .catch((err) => sendResponse({ success: false, error: err.message }));
+    return true;
+  }
+
   if (message.evt === 'saveOCRText') {
     const title = sender.tab ? sender.tab.title : 'OCR';
     const url = sender.tab ? sender.tab.url : '';
     autoSaveNote(message.text, title, url);
+    // Enviar el texto extraído al popup para que lo agregue en el editor si está abierto
+    browserAPI.runtime.sendMessage({ action: 'ocrResult', text: message.text }).catch(() => {});
     sendResponse({ success: true });
     return true;
   }
