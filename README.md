@@ -1,6 +1,8 @@
-# Notas Pro 🐾
+# OCR PRO 🐾
 
-Una extensión moderna y minimalista para Chromium (Chrome, Edge, Opera) que permite gestionar tus notas de forma eficiente con sincronización en la nube y OCR integrado.
+> ⚠️ **Estado del Proyecto:** Estamos trabajando activamente en este proyecto, enfocándonos principalmente en la integración y mejora de las capacidades de **OCR (Reconocimiento Óptico de Caracteres)**.
+
+Una extensión moderna y minimalista para Chromium (Chrome, Edge, Opera) que permite extraer texto de cualquier parte de la pantalla mediante OCR y gestionar tus notas de forma eficiente con sincronización en la nube.
 
 ## ✨ Características
 
