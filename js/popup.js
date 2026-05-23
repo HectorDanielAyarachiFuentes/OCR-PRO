@@ -268,9 +268,7 @@ async function performSave(isAutoSave = false) {
   if (!isAutoSave) {
     titleEl.classList.remove('invalid');
     contentEl.classList.remove('invalid');
-    if (title && !content && !title) {
-       // logic
-    }
+
     if (!title && !content) {
       titleEl.classList.add('invalid');
       contentEl.classList.add('invalid');
@@ -279,23 +277,32 @@ async function performSave(isAutoSave = false) {
     }
   }
 
+  // Generar título automático si está vacío
+  let finalTitle = title;
+  if (!finalTitle && content) {
+    // Tomar los primeros 30 caracteres del contenido como título
+    finalTitle = content.split('\\n')[0].substring(0, 30);
+    if (finalTitle.length === 30) finalTitle += '...';
+  }
+  if (!finalTitle) finalTitle = 'Nota sin título';
+
   const notes = await getNotes();
   const now = Date.now();
 
   if (editingId) {
     const noteToUpdate = notes.find(n => n.id === editingId);
     if (noteToUpdate) {
-      if (noteToUpdate.title === title && noteToUpdate.content === content) {
+      if (noteToUpdate.title === finalTitle && noteToUpdate.content === content) {
         return;
       }
-      noteToUpdate.title = title;
+      noteToUpdate.title = finalTitle;
       noteToUpdate.content = content;
       noteToUpdate.updatedAt = now;
     }
   } else if (!isAutoSave) {
     notes.push({
       id: crypto.randomUUID(),
-      title,
+      title: finalTitle,
       content,
       createdAt: now,
       updatedAt: now
@@ -303,7 +310,7 @@ async function performSave(isAutoSave = false) {
   } else {
     await new Promise(resolve => {
       browserAPI.storage.local.set({ 
-        editorDraft: { title, content },
+        editorDraft: { title: finalTitle, content },
         editingIdDraft: editingId 
       }, () => {
         resolve();
@@ -536,12 +543,6 @@ if (ocrBtn) {
       if (response && !response.success) {
         status('Error: ' + response.error, 'danger', 5000);
         if (container) container.classList.remove('ocr-processing');
-      } else {
-        // Solo cerramos si no estamos abiertos como una pestaña propiamente dicha
-        const currentTab = await browserAPI.tabs.getCurrent();
-        if (!currentTab) {
-          setTimeout(() => window.close(), 2000);
-        }
       }
     } catch (e) {
       status('Error: ' + e.message, 'danger', 5000);
@@ -729,6 +730,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   browserAPI.runtime.onMessage.addListener((msg) => {
     if (msg.action === 'ocrResult') {
+      const container = document.querySelector('.container');
+      if (container) container.classList.remove('ocr-processing');
+
       if (msg.text) {
         contentEl.value += (contentEl.value ? '\n\n' : '') + msg.text;
         updateCharCount();
