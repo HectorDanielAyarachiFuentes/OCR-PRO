@@ -64,14 +64,26 @@ const EMOJI_LIST = [
 
 // --- Navegación ---
 function switchTab(targetTab) {
-  tabs.forEach(tab => tab.classList.toggle('active', tab.dataset.tab === targetTab));
-  tabPanels.forEach(panel => panel.classList.toggle('active', panel.id === `tab-${targetTab}`));
-  
-  const activePanel = document.getElementById(`tab-${targetTab}`);
-  if (activePanel) {
-    activePanel.style.animation = 'none';
-    activePanel.offsetHeight; // trigger reflow
-    activePanel.style.animation = 'fadeIn 0.4s ease-out';
+  try {
+    tabs.forEach(tab => {
+      if (tab) tab.classList.toggle('active', tab.dataset.tab === targetTab);
+    });
+    tabPanels.forEach(panel => {
+      if (panel) {
+        const isActive = panel.id === `tab-${targetTab}`;
+        panel.classList.toggle('active', isActive);
+        panel.style.display = isActive ? 'flex' : 'none';
+      }
+    });
+    
+    const activePanel = document.getElementById(`tab-${targetTab}`);
+    if (activePanel) {
+      activePanel.style.animation = 'none';
+      activePanel.offsetHeight; // trigger reflow
+      activePanel.style.animation = 'fadeIn 0.4s ease-out';
+    }
+  } catch (err) {
+    status('Error en switchTab: ' + err.message, 'danger', 5000);
   }
 }
 
@@ -360,29 +372,29 @@ if (deleteAllBtn) {
   });
 }
 
-settingsBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isHidden = settingsDropdown.style.display === 'none';
-  settingsDropdown.style.display = isHidden ? 'block' : 'none';
-});
-
+// Escuchador global para el botón de ajustes (garantiza captura de clics incluso si el DOM cambia)
 document.addEventListener('click', (e) => {
-  if (settingsDropdown && settingsBtn && 
-      !settingsDropdown.contains(e.target) && 
-      !settingsBtn.contains(e.target)) {
-    settingsDropdown.style.display = 'none';
+  const settingsClicked = e.target.closest('#settings-btn') || e.target.closest('[data-tab="settings"]');
+  if (settingsClicked) {
+    e.preventDefault();
+    e.stopPropagation();
+    switchTab('settings');
   }
 });
 
-themeSelector.addEventListener('change', (e) => {
-  const selectedTheme = e.target.value;
-  applyTheme(selectedTheme);
-  browserAPI.storage.sync.set({ theme: selectedTheme }, () => {
-    if (browserAPI.runtime.lastError) {
-      browserAPI.storage.local.set({ theme: selectedTheme });
-    }
+// El código para cerrar el dropdown fue eliminado porque ahora es una pestaña.
+
+if (themeSelector) {
+  themeSelector.addEventListener('change', (e) => {
+    const selectedTheme = e.target.value;
+    applyTheme(selectedTheme);
+    browserAPI.storage.sync.set({ theme: selectedTheme }, () => {
+      if (browserAPI.runtime.lastError) {
+        browserAPI.storage.local.set({ theme: selectedTheme });
+      }
+    });
   });
-});
+}
 
 if (psmSelector) {
   psmSelector.addEventListener('change', (e) => {
@@ -510,7 +522,7 @@ if (pinBtn) {
       browserAPI.sidebarAction.open();
       window.close();
     } else {
-      await chrome.windows.create({ url: 'popup.html', type: 'popup', width: 450, height: 750 });
+      await browserAPI.windows.create({ url: 'popup.html', type: 'popup', width: 450, height: 750 });
       window.close();
     }
   });

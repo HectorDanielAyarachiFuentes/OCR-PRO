@@ -8,8 +8,8 @@ if (typeof browser === "undefined") {
 	// pseudo-private members
 	// var $ = jQuery;
 	var isFirefox = typeof InstallTrigger !== 'undefined';
-	var appName = 'Notas Pro OCR';
-	var appShortName = 'Notas Pro OCR';
+	var appName = 'OCR Pro';
+	var appShortName = 'OCR Pro';
 	var $ready;
 	var HTMLSTRCOPY;
 	var APPCONFIG;
@@ -1913,7 +1913,7 @@ if (typeof browser === "undefined") {
 			if (OPTIONS.status && OPTIONS.status.toLowerCase() === 'free plan') {
 				$('.ocrext-title span').text(appName);
 			} else {
-				$('.ocrext-title span').text(appName + " (" + (OPTIONS.status || 'Pro') + ")");
+				$('.ocrext-title span').text(appName);
 			}
 			// set paragraph font
 			_setLanguageOnUI();
@@ -2035,7 +2035,7 @@ if (typeof browser === "undefined") {
 			if (OPTIONS.status && OPTIONS.status.toLowerCase() === 'free plan') {
 				$('.ocrext-title span').text(appName);
 			} else {
-				$('.ocrext-title span').text(appName + " " + OPTIONS.status);
+				$('.ocrext-title span').text(appName);
 			}
 			OCRTranslator.reset();
 			// show mask

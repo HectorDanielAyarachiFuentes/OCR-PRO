@@ -121,49 +121,101 @@
           </div>
         </section>
 
-        <!-- ── PESTAÑA: CÓMO FUNCIONA ── -->
-        <section id="tab-help" class="tab-panel">
-          <div class="help-container">
-            <div class="beta-badge">🚀 VERSIÓN BETA</div>
-            
-            <section class="help-section">
-              <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Modos de Guardado</h2>
-              <div class="help-card">
-                <div class="help-card-title">💾 Almacenamiento Local (Persistente)</div>
-                <p>Tus notas se guardan en una <strong>base de datos interna</strong> del navegador (Storage API). A diferencia de la caché, esta base de datos es persistente: tus notas <strong>no se borran</strong> al limpiar el historial o la caché. Es el lugar más privado y seguro para tus datos.</p>
+        <!-- ── PESTAÑA: AJUSTES Y ACERCA DE ── -->
+        <section id="tab-settings" class="tab-panel">
+          <div class="settings-content" style="padding: 16px;">
+            <div class="settings-section" style="background: var(--surface); padding: 16px; border-radius: 16px; margin-bottom: 24px; border: 1px solid var(--border-color);">
+              <h2 style="font-size: 16px; margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Preferencias
+              </h2>
+              <div class="setting-item" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span class="setting-label">Tema Visual</span>
+                <select id="theme-selector" style="max-width: 150px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 6px 12px; border-radius: 8px;">
+                  <option value="system">Sistema</option>
+                  <option value="light">Claro</option>
+                  <option value="dark">Oscuro</option>
+                </select>
               </div>
-            </section>
-
-            <section class="help-section">
-              <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2z"></path><path d="M8 11v4"></path><path d="M12 9v6"></path><path d="M16 11v4"></path></svg> Tecnología OCR</h2>
-              <p>Extraé texto de imágenes y videos con dos potentes motores:</p>
-              <div class="help-grid">
-                <div class="help-mini-card">
-                  <strong>OCR Local</strong>
-                  <span>Usa Tesseract.js para procesar todo en tu PC. Privacidad total y sin límites.</span>
+                <div class="setting-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span style="font-size: 14px;">Modo OCR Predeterminado</span>
+                <select id="psm-selector" style="max-width: 150px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 6px 12px; border-radius: 8px;">
+                  <option value="auto">Automático (Recomendado)</option>
+                  <option value="single_block">Bloque de texto simple</option>
+                  <option value="single_line">Línea única</option>
+                </select>
+              </div>
+              <div class="setting-item" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <span style="font-size: 14px;">Respaldo de Notas</span>
+                <div style="display: flex; gap: 8px;">
+                  <button id="profile-export-btn" class="settings-btn secondary" title="Descargar notas en un archivo" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Exportar
+                  </button>
+                  <button id="profile-import-btn" class="settings-btn secondary" title="Cargar notas desde archivo" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 6px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-size: 12px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> Importar
+                  </button>
+                  <input type="file" id="import-file-input" accept=".json" style="display: none;">
                 </div>
-                <div class="help-mini-card">
-                  <strong>OCR Online</strong>
-                  <span>Usa servidores externos para mayor precisión en textos complejos.</span>
+              </div>
+            </div>
+
+            <div class="help-container" style="background: var(--surface); padding: 16px; border-radius: 16px; border: 1px solid var(--border-color);">
+              <div class="beta-badge" style="margin-bottom: 16px; display: inline-block; background: rgba(59, 130, 246, 0.2); color: var(--accent-light); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 800;">🚀 VERSIÓN BETA</div>
+              <h2 style="font-size: 16px; margin-top: 0; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Cómo trabajamos
+              </h2>
+              
+              <section class="help-section" style="margin-bottom: 20px;">
+                <h3 style="font-size: 14px; margin-top: 0;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Modos de Guardado</h3>
+                <div class="help-card" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                  <div class="help-card-title" style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">💾 Almacenamiento Local (Persistente)</div>
+                  <p style="font-size: 12px; opacity: 0.8; margin: 0;">Tus notas se guardan en una <strong>base de datos interna</strong> del navegador (Storage API). A diferencia de la caché, esta base de datos es persistente: tus notas <strong>no se borran</strong> al limpiar el historial o la caché. Es el lugar más privado y seguro para tus datos.</p>
                 </div>
-              </div>
-            </section>
+              </section>
 
-            <section class="help-section">
-              <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> Captura Inteligente</h2>
-              <div class="help-card">
-                <div class="help-card-title">📋 Copiado Automático</div>
-                <p>Nuestro sistema de monitoreo detecta cuando copiás un texto y lo prepara automáticamente para guardarlo, asegurando que no pierdas ninguna idea importante.</p>
-              </div>
-              <div class="help-card">
-                <div class="help-card-title">🔗 Rastreo de Contexto</div>
-                <p>Cada vez que capturás información, Notas Pro agrega automáticamente la <strong>URL de origen</strong>. Así, siempre sabrás de qué página sacaste el dato y podrás volver a ella con un clic.</p>
-              </div>
-            </section>
+              <section class="help-section" style="margin-bottom: 20px;">
+                <h3 style="font-size: 14px; margin-top: 0;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2z"></path><path d="M8 11v4"></path><path d="M12 9v6"></path><path d="M16 11v4"></path></svg> Tecnología OCR</h3>
+                <p style="font-size: 12px; opacity: 0.8; margin: 0 0 8px 0;">Extraé texto de imágenes y videos con dos potentes motores:</p>
+                <div class="help-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                  <div class="help-mini-card" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                    <strong style="font-size: 13px; display: block; margin-bottom: 4px;">OCR Local</strong>
+                    <span style="font-size: 11px; opacity: 0.7;">Usa Tesseract.js para procesar todo en tu PC. Privacidad total y sin límites.</span>
+                  </div>
+                  <div class="help-mini-card" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                    <strong style="font-size: 13px; display: block; margin-bottom: 4px;">OCR Online</strong>
+                    <span style="font-size: 11px; opacity: 0.7;">Usa servidores externos para mayor precisión en textos complejos.</span>
+                  </div>
+                </div>
+              </section>
 
-            <section class="help-section disclaimer">
-              <p>⚠️ <strong>Aviso:</strong> Esta aplicación fue desarrollada para uso personal del desarrollador. Si sos un usuario avanzado, podés modificar los parámetros en el código fuente. ¡Usala con sabiduría!</p>
-            </section>
+              <section class="help-section" style="margin-bottom: 20px;">
+                <h3 style="font-size: 14px; margin-top: 0;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px; vertical-align: middle;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> Captura Inteligente</h3>
+                <div class="help-card" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                  <div class="help-card-title" style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">📋 Copiado Automático</div>
+                  <p style="font-size: 12px; opacity: 0.8; margin: 0;">Nuestro sistema de monitoreo detecta cuando copiás un texto y lo prepara automáticamente para guardarlo.</p>
+                </div>
+                <div class="help-card" style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px;">
+                  <div class="help-card-title" style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">🔗 Rastreo de Contexto</div>
+                  <p style="font-size: 12px; opacity: 0.8; margin: 0;">Cada vez que capturás información, Notas Pro agrega automáticamente la <strong>URL de origen</strong>.</p>
+                </div>
+              </section>
+
+              <section class="help-section disclaimer" style="margin-bottom: 20px;">
+                <p style="font-size: 12px; color: var(--danger); background: rgba(244, 63, 94, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(244, 63, 94, 0.2); margin: 0;">⚠️ <strong>Aviso:</strong> Esta aplicación fue desarrollada para uso personal del desarrollador. Si sos un usuario avanzado, podés modificar los parámetros en el código fuente. ¡Usala con sabiduría!</p>
+              </section>
+              
+              <div class="settings-footer" style="text-align: center; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <a href="https://github.com/HectorDanielAyarachiFuentes" target="_blank" class="about-us-link" title="Visitar perfil de GitHub" style="display: inline-block; text-decoration: none;">
+                  <div class="about-us-container" style="position: relative; margin-bottom: 12px;">
+                    <span class="speech-bubble" style="position: absolute; top: -30px; left: 50%; transform: translateX(-50%); background: var(--accent); color: white; padding: 4px 8px; border-radius: 8px; font-size: 10px; font-weight: bold; white-space: nowrap; transition: opacity 0.2s;">GUAO GUAO! 🐾</span>
+                    <img src="img/dulceflamengo.png" alt="Logo" class="about-us-logo" style="width: 60px; height: 60px; border-radius: 16px; border: 2px solid var(--accent); transition: transform 0.2s;">
+                  </div>
+                </a>
+                <p style="font-size: 11px; margin: 0; font-weight: 800; opacity: 0.8; color: var(--text-primary);">Notas Pro v<span id="extension-version">1.0</span></p>
+                <p style="font-size: 10px; margin: 4px 0 0 0; font-weight: 600; opacity: 0.5; color: var(--text-primary);">Hecho por Hector Daniel Ayarachi Fuentes</p>
+              </div>
+            </div>
           </div>
         </section>
       </main>
@@ -191,45 +243,7 @@
             </button>
           </div>
 
-          <div id="settings-dropdown" class="settings-menu" style="display: none;">
-            <div class="settings-header">
-              <h3>Ajustes</h3>
-            </div>
-
-            <div class="settings-section">
-              <div class="setting-item">
-                <span class="setting-label">Tema Visual</span>
-                <select id="theme-selector">
-                  <option value="system">Sistema</option>
-                  <option value="light">Claro</option>
-                  <option value="dark">Oscuro</option>
-                </select>
-              </div>
-              <div class="setting-item">
-                <span class="setting-label" title="Modo de Segmentación (PSM)">Modo OCR</span>
-                <select id="psm-selector">
-                  <option value="auto">✨ Inteligente (Auto-detectar)</option>
-                  <option value="6">📰 Artículos (Párrafos/Columnas)</option>
-                  <option value="3">📊 Tablas (Datos en celdas)</option>
-                </select>
-              </div>
-              <button id="show-guide-btn" class="guide-link-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                <span>Ver Guía de Uso</span>
-              </button>
-            </div>
-
-            <div class="settings-footer">
-              <a href="https://github.com/HectorDanielAyarachiFuentes" target="_blank" class="about-us-link" title="Visitar perfil de GitHub">
-                <div class="about-us-container">
-                  <span class="speech-bubble">GUAO GUAO! 🐾</span>
-                  <img src="img/dulceflamengo.png" alt="Logo" class="about-us-logo">
-                </div>
-              </a>
-              <p style="font-size: 11px; margin: 0; font-weight: 800; opacity: 0.8;">Notas Pro v<span id="extension-version">1.0</span></p>
-              <p style="font-size: 10px; margin: 4px 0 0 0; font-weight: 600; opacity: 0.5; text-align: center;">Hecho por Hector Daniel Ayarachi Fuentes</p>
-            </div>
-          </div>
+          <!-- El menú desplegable de ajustes se ha movido al tab-settings -->
         </header>
 
         <nav class="tabs">
@@ -244,6 +258,10 @@
           <button class="tab-button" data-tab="sync">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>Perfil</span>
+          </button>
+          <button class="tab-button" data-tab="settings">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Ajustes</span>
           </button>
         </nav>
         <div class="app-info-sidebar">
