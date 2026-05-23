@@ -442,9 +442,13 @@ async function exportNotes() {
 
 const profileExportBtn = document.getElementById('profile-export-btn');
 const profileImportBtn = document.getElementById('profile-import-btn');
+const settingsExportBtn = document.getElementById('settings-export-btn');
+const settingsImportBtn = document.getElementById('settings-import-btn');
 
 if (profileExportBtn) profileExportBtn.addEventListener('click', exportNotes);
+if (settingsExportBtn) settingsExportBtn.addEventListener('click', exportNotes);
 if (profileImportBtn) profileImportBtn.addEventListener('click', () => importFileInput.click());
+if (settingsImportBtn) settingsImportBtn.addEventListener('click', () => importFileInput.click());
 
 if (importFileInput) {
   importFileInput.addEventListener('change', (e) => {
@@ -667,6 +671,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   detectSidePanel();
   await initLocalProfile();
   await renderNotes();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
+  if (tabParam) {
+    switchTab(tabParam);
+  }
   
   const { theme, psmMode } = await browserAPI.storage.sync.get(['theme', 'psmMode']);
   if (theme) applyTheme(theme);

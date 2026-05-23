@@ -113,11 +113,13 @@ browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.evt === 'open-settings') {
+    browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html?tab=settings') });
     sendResponse({ success: true });
     return true;
   }
 
   if (message.evt === 'open-app') {
+    browserAPI.tabs.create({ url: browserAPI.runtime.getURL('popup.html') });
     sendResponse({ success: true });
     return true;
   }
