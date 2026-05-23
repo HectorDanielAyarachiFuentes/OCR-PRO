@@ -1024,9 +1024,9 @@ if (typeof browser === "undefined") {
 						successMsg = 'Text loaded';
 					} else {
 						var elapsedSec = ((Date.now() - ocrStartTime) / 1000).toFixed(2);
-						successMsg = browser.i18n.getMessage('ocrSuccessStatus') + ' (' + elapsedSec + 's)';
+						successMsg = 'Terminado en ' + elapsedSec + 's';
 					}
-					OCRTranslator.setStatus('success', successMsg);
+					OCRTranslator.setStatus('success', successMsg, true);
 					OCRTranslator.enableContent();
 				})
 				.fail(function (err) {
