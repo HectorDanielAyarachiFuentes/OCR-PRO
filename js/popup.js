@@ -1,6 +1,6 @@
 import browserAPI from './browser-api.js';
 import {
-  getNotes, saveNotes, getLocalProfile, saveLocalProfile
+  getNotes, saveNotes
 } from './storage-manager.js';
 
 // Detección de Panel Lateral vs Popup
@@ -25,42 +25,16 @@ const statusEl = document.getElementById('status');
 const tabs = document.querySelectorAll('.tab-button');
 const tabPanels = document.querySelectorAll('.tab-panel');
 const searchInput = document.getElementById('search-input');
-const settingsBtn = document.getElementById('settings-btn');
 const deleteAllBtn = document.getElementById('deleteAllBtn');
-const settingsDropdown = document.getElementById('settings-dropdown');
-const versionSpan = document.getElementById('extension-version');
 const themeSelector = document.getElementById('theme-selector');
 const psmSelector = document.getElementById('psm-selector');
 const importFileInput = document.getElementById('import-file-input');
 const pinBtn = document.getElementById('pin-btn');
 const ocrBtn = document.getElementById('ocr-btn');
 
-// Local profile
-const localProfileName   = document.getElementById('local-profile-name');
-const localNameInput     = document.getElementById('local-name-input');
-const editLocalNameBtn   = document.getElementById('edit-local-name-btn');
-const localIconTrigger   = document.getElementById('local-icon-picker-trigger');
-const emojiPicker        = document.getElementById('emoji-picker');
-const emojiGrid          = document.getElementById('emoji-grid');
-const localHeaderIcon    = document.getElementById('local-header-icon');
-const localHeaderName    = document.getElementById('local-header-name');
-const profileImgInput    = document.getElementById('profile-img-input');
-const uploadImgBtn       = document.getElementById('upload-profile-img-btn');
-
 let editingId = null;
 let statusTimeout = null;
 let autoSaveTimeout = null;
-let currentProfile = { name: 'Mi Espacio', icon: '📝' };
-
-// ─── Emojis disponibles ───
-const EMOJI_LIST = [
-  '📝','📓','📔','📒','📕','📗','📘','📙',
-  '🗒️','📋','📄','📃','🗂️','🗃️','📁','🗄️',
-  '✏️','🖊️','🖋️','🔏','🔐','🔑','💡','⭐',
-  '🌟','🔥','💎','🎯','🚀','🌈','🦋','🐾',
-  '🍀','🌺','🌸','🎨','🎭','🏆','❤️','💜',
-  '💙','💚','🧡','🤍','🌙','☀️','⚡','🌊'
-];
 
 // --- Navegación ---
 function switchTab(targetTab) {
@@ -379,18 +353,6 @@ if (deleteAllBtn) {
   });
 }
 
-// Escuchador global para el botón de ajustes (garantiza captura de clics incluso si el DOM cambia)
-document.addEventListener('click', (e) => {
-  const settingsClicked = e.target.closest('#settings-btn') || e.target.closest('[data-tab="settings"]');
-  if (settingsClicked) {
-    e.preventDefault();
-    e.stopPropagation();
-    switchTab('settings');
-  }
-});
-
-// El código para cerrar el dropdown fue eliminado porque ahora es una pestaña.
-
 if (themeSelector) {
   themeSelector.addEventListener('change', (e) => {
     const selectedTheme = e.target.value;
@@ -449,13 +411,9 @@ async function exportNotes() {
 
 const profileExportBtn = document.getElementById('profile-export-btn');
 const profileImportBtn = document.getElementById('profile-import-btn');
-const settingsExportBtn = document.getElementById('settings-export-btn');
-const settingsImportBtn = document.getElementById('settings-import-btn');
 
 if (profileExportBtn) profileExportBtn.addEventListener('click', exportNotes);
-if (settingsExportBtn) settingsExportBtn.addEventListener('click', exportNotes);
 if (profileImportBtn) profileImportBtn.addEventListener('click', () => importFileInput.click());
-if (settingsImportBtn) settingsImportBtn.addEventListener('click', () => importFileInput.click());
 
 if (importFileInput) {
   importFileInput.addEventListener('change', (e) => {
@@ -571,150 +529,19 @@ if (pinBtn) {
   });
 }
 
-// --- Perfil Local ---
-async function initLocalProfile() {
-  currentProfile = await getLocalProfile();
-  updateProfileUI();
-  
-  // Renderizar grid de emojis
-  emojiGrid.textContent = '';
-  EMOJI_LIST.forEach(emoji => {
-    const span = document.createElement('span');
-    span.textContent = emoji;
-    span.className = 'emoji-item';
-    span.addEventListener('click', async () => {
-      currentProfile.icon = emoji;
-      await saveLocalProfile(currentProfile);
-      updateProfileUI();
-      emojiPicker.style.display = 'none';
-    });
-    emojiGrid.appendChild(span);
-  });
-}
-
-function updateProfileUI() {
-  const profileCard = document.querySelector('.local-profile-card');
-  const renderIcon = (el, icon) => {
-    if (icon && icon.startsWith('data:image')) {
-      el.textContent = '';
-      const img = document.createElement('img');
-      img.src = icon;
-      img.style.width = '100%';
-      img.style.height = '100%';
-      img.style.objectFit = 'contain';
-      img.style.display = 'block';
-      el.appendChild(img);
-    } else {
-      el.textContent = icon || '📝';
-    }
-  };
-  
-  // Renderizar en el header
-  renderIcon(localHeaderIcon, currentProfile.icon);
-  localHeaderName.textContent = currentProfile.name;
-  localProfileName.textContent = currentProfile.name;
-
-  // Aplicar fondo a la tarjeta completa si es imagen
-  if (profileCard) {
-    if (currentProfile.icon && currentProfile.icon.startsWith('data:image')) {
-      profileCard.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url(${currentProfile.icon})`;
-      profileCard.style.backgroundSize = 'cover';
-      profileCard.style.backgroundPosition = 'center';
-    } else {
-      profileCard.style.backgroundImage = '';
-    }
-  }
-}
-
-editLocalNameBtn.addEventListener('click', () => {
-  localProfileName.style.display = 'none';
-  localNameInput.style.display = 'block';
-  localNameInput.value = currentProfile.name;
-  localNameInput.focus();
-});
-
-localNameInput.addEventListener('blur', async () => {
-  const newName = localNameInput.value.trim() || 'Mi Espacio';
-  currentProfile.name = newName;
-  await saveLocalProfile(currentProfile);
-  localNameInput.style.display = 'none';
-  localProfileName.style.display = 'block';
-  updateProfileUI();
-});
-
-localNameInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') localNameInput.blur();
-});
-
-localIconTrigger.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isHidden = emojiPicker.style.display === 'none';
-  emojiPicker.style.display = isHidden ? 'block' : 'none';
-});
-
-if (uploadImgBtn && profileImgInput) {
-  uploadImgBtn.addEventListener('click', () => profileImgInput.click());
-
-  profileImgInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = async () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const size = 160; 
-        canvas.width = size;
-        canvas.height = size;
-
-        // Ajustar imagen completa (contain) en lugar de recortar
-        const aspect = img.width / img.height;
-        let dw = size;
-        let dh = size;
-        let dx = 0;
-        let dy = 0;
-
-        if (aspect > 1) {
-          dh = size / aspect;
-          dy = (size - dh) / 2;
-        } else {
-          dw = size * aspect;
-          dx = (size - dw) / 2;
-        }
-
-        ctx.drawImage(img, dx, dy, dw, dh);
-        const dataUrl = canvas.toDataURL('image/webp', 0.85);
-
-        currentProfile.icon = dataUrl;
-        await saveLocalProfile(currentProfile);
-        updateProfileUI();
-        emojiPicker.style.display = 'none';
-        status('Foto de perfil actualizada.', 'success');
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-document.addEventListener('click', (e) => {
-  if (emojiPicker && !emojiPicker.contains(e.target) && !localIconTrigger.contains(e.target)) {
-    emojiPicker.style.display = 'none';
-  }
-});
-
 // --- Inicialización ---
 document.addEventListener('DOMContentLoaded', async () => {
   detectSidePanel();
-  await initLocalProfile();
   await renderNotes();
 
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
   if (tabParam) {
-    switchTab(tabParam);
+    if (tabParam === 'settings') {
+      switchTab('sync');
+    } else {
+      switchTab(tabParam);
+    }
   }
   
   const { theme, psmMode } = await browserAPI.storage.sync.get(['theme', 'psmMode']);
