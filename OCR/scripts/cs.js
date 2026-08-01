@@ -2096,9 +2096,9 @@ if (typeof browser === "undefined") {
 			$('#popup_translate_button img').attr('src', browser.runtime.getURL('OCR/images/translate.png'));
 
 			if (OPTIONS.status && OPTIONS.status.toLowerCase() === 'free plan') {
-				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.0</small>');
+				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.1</small>');
 			} else {
-				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.0</small>');
+				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.1</small>');
 			}
 			// set paragraph font
 			_setLanguageOnUI();
@@ -2218,9 +2218,9 @@ if (typeof browser === "undefined") {
 				.find('.ocrext-wrapper')
 				.hide();
 			if (OPTIONS.status && OPTIONS.status.toLowerCase() === 'free plan') {
-				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.0</small>');
+				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.1</small>');
 			} else {
-				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.0</small>');
+				$('.ocrext-title-name').html(appName + ' <small style="font-size: 0.6em; opacity: 0.8; font-weight: normal; margin-left: 4px;">v1.0.1</small>');
 			}
 			OCRTranslator.reset();
 			// show mask
