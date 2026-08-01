@@ -1477,6 +1477,85 @@ if (typeof browser === "undefined") {
 		document.body.removeChild(copyDiv);
 		return true
 	}
+	function showToast(message) {
+		// Remove any existing toast
+		$('.ocrext-toast').remove();
+
+		let toast = $('<div class="ocrext-element ocrext-toast"></div>').text(message);
+		let target = $('.ocrext-wrapper');
+		let isDialog = target.length > 0;
+
+		if (isDialog) {
+			toast.css({
+				'position': 'absolute',
+				'bottom': '70px',
+				'left': '50%',
+				'transform': 'translateX(-50%) translateY(20px)',
+				'background-color': '#06d6a0',
+				'color': '#ffffff',
+				'padding': '10px 20px',
+				'border-radius': '20px',
+				'font-family': "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+				'font-size': '14px',
+				'font-weight': '600',
+				'box-shadow': '0 8px 24px rgba(6, 214, 160, 0.3)',
+				'z-index': '999999',
+				'opacity': '0',
+				'transition': 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+				'pointer-events': 'none',
+				'display': 'flex',
+				'align-items': 'center',
+				'gap': '8px',
+				'white-space': 'nowrap'
+			});
+			target.append(toast);
+		} else {
+			toast.css({
+				'position': 'fixed',
+				'bottom': '80px',
+				'left': '50%',
+				'transform': 'translateX(-50%) translateY(20px)',
+				'background-color': '#06d6a0',
+				'color': '#ffffff',
+				'padding': '10px 20px',
+				'border-radius': '20px',
+				'font-family': "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+				'font-size': '14px',
+				'font-weight': '600',
+				'box-shadow': '0 8px 24px rgba(6, 214, 160, 0.3)',
+				'z-index': '999999',
+				'opacity': '0',
+				'transition': 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+				'pointer-events': 'none',
+				'display': 'flex',
+				'align-items': 'center',
+				'gap': '8px',
+				'white-space': 'nowrap'
+			});
+			$('body').append(toast);
+		}
+
+		let checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: #ffffff;"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+		toast.prepend(checkIcon);
+
+		setTimeout(() => {
+			toast.css({
+				'opacity': '1',
+				'transform': 'translateX(-50%) translateY(0)'
+			});
+		}, 50);
+
+		setTimeout(() => {
+			toast.css({
+				'opacity': '0',
+				'transform': 'translateX(-50%) translateY(-10px)'
+			});
+			setTimeout(() => {
+				toast.remove();
+			}, 300);
+		}, 2000);
+	}
+
 	const onOCRCopy = (translateAuto = false) => {
 		/*Copy button click handler*/
 		if (translateAuto && !OPTIONS.copyAfterProcess) {
@@ -1517,6 +1596,9 @@ if (typeof browser === "undefined") {
 				animatedText();
 				// Integración con OCR Pro: Guardar automáticamente al copiar
 				browser.runtime.sendMessage({ evt: 'saveOCRText', text: text });
+				if (!translateAuto) {
+					showToast('Elemento copiado');
+				}
 			}
 		} else {
 			let isCopied = fireCopy(text);
@@ -1524,6 +1606,9 @@ if (typeof browser === "undefined") {
 				animatedText();
 				// Integración con OCR Pro: Guardar automáticamente al copiar
 				browser.runtime.sendMessage({ evt: 'saveOCRText', text: text });
+				if (!translateAuto) {
+					showToast('Elemento copiado');
+				}
 			}
 		}
 	}
