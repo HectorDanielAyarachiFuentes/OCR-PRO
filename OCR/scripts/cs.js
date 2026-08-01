@@ -157,6 +157,95 @@ if (typeof browser === "undefined") {
 	var _isImageParseError = function (data) {
 		return data && data.ParsedResults && data.ParsedResults.length && data.ParsedResults[0].FileParseExitCode === -10;
 	};
+	function formatOcrText(text) {
+		if (!text) return '';
+		
+		// Normalize line endings
+		text = text.replace(/\r\n/g, '\n');
+		
+		// Regex for CJK characters (Chinese, Japanese, Korean)
+		const CJK_REGEX = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf\uac00-\ud7af]/;
+		
+		// Split into individual lines
+		let rawLines = text.split('\n').map(line => line.trim());
+		if (rawLines.length === 0) return '';
+		
+		// Calculate the baseline length using lines > 30 characters to ignore short wraps
+		let longLines = rawLines.filter(l => l.length > 30);
+		let baselineLength = 60; // Default fallback
+		if (longLines.length > 0) {
+			let totalLongLength = longLines.reduce((sum, l) => sum + l.length, 0);
+			baselineLength = totalLongLength / longLines.length;
+		}
+		
+		let paragraphs = [];
+		let currentParagraphLines = [];
+		
+		for (let i = 0; i < rawLines.length; i++) {
+			let line = rawLines[i];
+			
+			if (line.length === 0) {
+				// Empty line is an explicit paragraph break
+				if (currentParagraphLines.length > 0) {
+					paragraphs.push(currentParagraphLines);
+					currentParagraphLines = [];
+				}
+				continue;
+			}
+			
+			currentParagraphLines.push(line);
+			
+			// Detect if this line ends a paragraph:
+			// 1. It ends with a sentence terminator (., !, ?, etc. optionally followed by quotes/parentheses)
+			// 2. Its length is significantly shorter than the baseline (< 75%)
+			// 3. Or the next line is a list item
+			let endsWithTerminator = /[\.\!\?。！\?？]['"»\)\]\s]*$/.test(line);
+			let isShortLine = line.length < baselineLength * 0.75;
+			
+			let nextLine = rawLines[i + 1];
+			let nextIsList = nextLine && /^[-\*+•\u2022\u2013\u2014]\s|^\d+[\.\)]\s|^[a-zA-Z][\.\)]\s/.test(nextLine.trim());
+			
+			if ((endsWithTerminator && isShortLine) || nextIsList) {
+				paragraphs.push(currentParagraphLines);
+				currentParagraphLines = [];
+			}
+		}
+		
+		if (currentParagraphLines.length > 0) {
+			paragraphs.push(currentParagraphLines);
+		}
+		
+		// Format each paragraph
+		let formattedParagraphs = paragraphs.map(lines => {
+			if (lines.length === 0) return '';
+			
+			let result = lines[0];
+			for (let i = 1; i < lines.length; i++) {
+				let currentLine = lines[i];
+				let isListMarker = /^[-\*+•\u2022\u2013\u2014]\s|^\d+[\.\)]\s|^[a-zA-Z][\.\)]\s/.test(currentLine);
+				
+				if (isListMarker) {
+					result += '\n' + currentLine;
+				} else {
+					if (result.endsWith('-')) {
+						result += currentLine;
+					} else {
+						let lastChar = result.charAt(result.length - 1);
+						let firstChar = currentLine.charAt(0);
+						if (CJK_REGEX.test(lastChar) || CJK_REGEX.test(firstChar)) {
+							result += currentLine;
+						} else {
+							result += ' ' + currentLine;
+						}
+					}
+				}
+			}
+			return result;
+		});
+		
+		// Rejoin paragraphs with double newlines
+		return formattedParagraphs.filter(p => p.length > 0).join('\n\n');
+	}
 	var ENGINES = [
 		{ value: 'OcrSpace', label: 'Motor OCR 1' },
 		{ value: 'OcrSpaceSecond', label: 'Motor OCR 2' },
@@ -1057,10 +1146,11 @@ if (typeof browser === "undefined") {
 				});
 			$ocr
 				.done(function (text, overlayInfo, opts = {}) {
+					let formattedText = formatOcrText(text);
 					$('.ocrext-ocr-message')
-						.val(text)
+						.val(formattedText)
 						.trigger('ocrResultChanged');
-					$('#popup_support_text').text(text);
+					$('#popup_support_text').text(formattedText);
 					_updateNanoTitle();
 					// dataURI should be visible as it is encapsulated within _processOCRTranslate
 					// the mad-world of async programming
@@ -1463,19 +1553,29 @@ if (typeof browser === "undefined") {
 
 
 	function fireCopy(text) {
-		var copyDiv;
-		copyDiv = document.createElement('div');
-		copyDiv.contentEditable = true;
-		copyDiv.style = "white-space:pre-wrap;"
-		document.body.appendChild(copyDiv);
-		copyDiv.textContent = text;
-		copyDiv.unselectable = 'off';
-		copyDiv.classList.add('copy-hidden');
-		copyDiv.focus();
-		document.execCommand('SelectAll');
-		document.execCommand('Copy', false, null);
-		document.body.removeChild(copyDiv);
-		return true
+		if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+			navigator.clipboard.writeText(text).catch(() => {
+				fallbackCopy(text);
+			});
+			return true;
+		}
+		return fallbackCopy(text);
+	}
+
+	function fallbackCopy(text) {
+		var textarea = document.createElement('textarea');
+		textarea.value = text;
+		textarea.style.position = 'fixed';
+		textarea.style.opacity = '0';
+		document.body.appendChild(textarea);
+		textarea.select();
+		try {
+			document.execCommand('copy');
+		} catch (err) {
+			console.error('Fallback copy failed', err);
+		}
+		document.body.removeChild(textarea);
+		return true;
 	}
 	function showToast(message) {
 		// Remove any existing toast

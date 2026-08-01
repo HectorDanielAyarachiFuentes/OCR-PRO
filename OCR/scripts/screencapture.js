@@ -180,18 +180,30 @@ let ScreenCap = {
 			return imageLoadDfd;
 		}
 		function copyToClipboard(request, sendResponse) {
-			let copyDivElm = document.createElement('div');
-			copyDivElm.contentEditable = true;
-			copyDivElm.style.opacity = 0;
-			copyDivElm.style = "white-space:pre-wrap;"
-			document.body.appendChild(copyDivElm);
-			copyDivElm.textContent = request && request.data || '';
-			copyDivElm.unselectable = 'off';
-			copyDivElm.focus();
-			document.execCommand('SelectAll');
-			document.execCommand('Copy', false, null);
-			document.body.removeChild(copyDivElm);
+			let text = request && request.data || '';
+			if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+				navigator.clipboard.writeText(text).catch(() => {
+					fallbackCopy(text);
+				});
+			} else {
+				fallbackCopy(text);
+			}
 			request.onComplete && request.onComplete();
+		}
+
+		function fallbackCopy(text) {
+			var textarea = document.createElement('textarea');
+			textarea.value = text;
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			try {
+				document.execCommand('copy');
+			} catch (err) {
+				console.error('Fallback copy failed', err);
+			}
+			document.body.removeChild(textarea);
 		}
 
 		browser.runtime.onMessage.addListener(function (request, sender, sendResponse) {

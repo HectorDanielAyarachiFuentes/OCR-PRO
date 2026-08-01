@@ -274,7 +274,7 @@ async function handleBackgroundOCR(tab) {
         files: [
           'OCR/scripts/crossbrowser.js',
           'OCR/scripts/jquery.min.js',
-          'OCR/scripts/tesseract.min.js',
+          'OCR/lib/tesseract.min.js',
           'OCR/scripts/overlay.js',
           'OCR/scripts/cs.js'
         ]

@@ -73,12 +73,7 @@
         "OCR/config/config.json",
         "OCR/styles/material.min.css",
         "OCR/styles/cs.css",
-        "OCR/scripts/tesseract.esm.js",
-        "OCR/scripts/worker.min.js",
-        "OCR/scripts/tesseract-core-simd.wasm.js",
-        "OCR/scripts/tesseract-core-simd.wasm",
-        "OCR/tessdata/*",
-        "OCR/tessdata_best/*",
+        "OCR/lib/*",
         "OCR/images/*"
       ],
       "matches": ["<all_urls>"]
