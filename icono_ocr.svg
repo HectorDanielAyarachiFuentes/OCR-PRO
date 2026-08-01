@@ -1,70 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 25 140 140" width="100%" height="100%">
-    
-    <defs>
-        <linearGradient id="docGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ffffff"/>
-            <stop offset="100%" stop-color="#f0f2f5"/>
-        </linearGradient>
-        
-        <linearGradient id="scanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="rgba(0, 114, 255, 0)"/>
-            <stop offset="50%" stop-color="rgba(0, 114, 255, 0.3)"/>
-            <stop offset="100%" stop-color="rgba(0, 114, 255, 0.8)"/>
-        </linearGradient>
-        
-        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-            <feDropShadow dx="2" dy="5" stdDeviation="4" flood-opacity="0.15"/>
-        </filter>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Gradiente vertical para los soportes superiores (Cian arriba, Azul abajo) -->
+    <linearGradient id="gradTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#26c6da"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
 
-        <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#333333"/>
-            <stop offset="100%" stop-color="#666666"/>
-        </linearGradient>
-    </defs>
+    <!-- Gradiente vertical para los soportes inferiores (Cian abajo, Azul arriba) -->
+    <linearGradient id="gradBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#26c6da"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
 
-    <!-- Document Base -->
-    <rect x="40" y="30" width="120" height="130" rx="12" fill="url(#docGradient)" stroke="#e0e0e0" stroke-width="2" filter="url(#shadow)"/>
-    
-    <!-- Document Fold (Top Right) -->
-    <path d="M120 30 L160 70 L120 70 Z" fill="#e0e0e0" opacity="0.6"/>
-    <path d="M120 30 L160 70" stroke="#e0e0e0" stroke-width="2"/>
-    <path d="M160 30 L160 70 L120 30 Z" fill="#ffffff"/> <!-- Masking the corner -->
-    
-    <!-- Text Lines (representing original image text) -->
-    <g fill="url(#textGradient)" opacity="0.4">
-        <rect x="55" y="55" width="80" height="6" rx="3"/>
-        <rect x="55" y="75" width="90" height="6" rx="3"/>
-        <rect x="55" y="95" width="70" height="6" rx="3"/>
-        <rect x="55" y="115" width="85" height="6" rx="3"/>
-    </g>
+    <!-- Gradiente para el pliegue superior -->
+    <linearGradient id="flapGradTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#80deea"/>
+      <stop offset="100%" stop-color="#0088ff"/>
+    </linearGradient>
 
-    <!-- Scanning Area -->
-    <rect x="35" y="65" width="130" height="40" fill="url(#scanGradient)"/>
-    
-    <!-- Scan Line -->
-    <line x1="35" y1="105" x2="165" y2="105" stroke="#0072ff" stroke-width="4" stroke-linecap="round"/>
-    
-    <!-- Recognized Text (Clean, clear text emerging from the scan) -->
-    <g fill="#0072ff">
-        <rect x="55" y="70" width="80" height="6" rx="3"/>
-        <rect x="55" y="90" width="90" height="6" rx="3"/>
-    </g>
+    <!-- Gradiente para el pliegue inferior -->
+    <linearGradient id="flapGradBottom" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#80deea"/>
+      <stop offset="100%" stop-color="#0088ff"/>
+    </linearGradient>
 
-    <!-- Viewfinder / Lens Focus Corners -->
-    <g stroke="#0072ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <!-- Top Left -->
-        <path d="M50 45 L40 45 L40 55"/>
-        <!-- Top Right -->
-        <path d="M150 45 L160 45 L160 55"/>
-        <!-- Bottom Left -->
-        <path d="M40 135 L40 145 L50 145"/>
-        <!-- Bottom Right -->
-        <path d="M160 135 L160 145 L150 145"/>
-    </g>
-    
-    <!-- Magnifying Glass / Extraction Symbol -->
-    <circle cx="100" cy="105" r="14" fill="#ffffff" stroke="#0072ff" stroke-width="3" filter="url(#shadow)"/>
-    <!-- OCR Text inside circle -->
-    <text x="100" y="108.5" font-family="sans-serif" font-size="9" font-weight="bold" fill="#0072ff" text-anchor="middle">OCR</text>
-    
+    <!-- Sombra suave para los pliegues 3D -->
+    <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- ── SOPORTE: SUPERIOR IZQUIERDO (TL) ── -->
+  <g>
+    <!-- Base -->
+    <path d="M 98 98 L 160 98 A 24 24 0 0 0 184 74 A 24 24 0 0 0 160 50 L 98 50 A 48 48 0 0 0 50 98 L 50 160 A 24 24 0 0 0 74 184 A 24 24 0 0 0 98 160 Z" fill="url(#gradTop)"/>
+    <!-- Sombra del pliegue -->
+    <path d="M 50 98 L 98 50 A 48 48 0 0 1 98 98 A 48 48 0 0 1 50 98 Z" fill="rgba(0, 0, 0, 0.15)" transform="translate(1, 2)"/>
+    <!-- Pliegue doblado -->
+    <path d="M 50 98 L 98 50 A 48 48 0 0 1 98 98 A 48 48 0 0 1 50 98 Z" fill="url(#flapGradTop)"/>
+  </g>
+
+  <!-- ── SOPORTE: SUPERIOR DERECHO (TR) ── -->
+  <g>
+    <!-- Base -->
+    <path d="M 414 98 L 352 98 A 24 24 0 0 1 328 74 A 24 24 0 0 1 352 50 L 414 50 A 48 48 0 0 1 462 98 L 462 160 A 24 24 0 0 1 438 184 A 24 24 0 0 1 414 160 Z" fill="url(#gradTop)"/>
+    <!-- Sombra del pliegue -->
+    <path d="M 414 50 L 462 98 A 48 48 0 0 1 414 98 A 48 48 0 0 1 414 50 Z" fill="rgba(0, 0, 0, 0.15)" transform="translate(-1, 2)"/>
+    <!-- Pliegue doblado -->
+    <path d="M 414 50 L 462 98 A 48 48 0 0 1 414 98 A 48 48 0 0 1 414 50 Z" fill="url(#flapGradTop)"/>
+  </g>
+
+  <!-- ── SOPORTE: INFERIOR IZQUIERDO (BL) ── -->
+  <g>
+    <!-- Base -->
+    <path d="M 98 414 L 160 414 A 24 24 0 0 1 184 438 A 24 24 0 0 1 160 462 L 98 462 A 48 48 0 0 1 50 414 L 50 352 A 24 24 0 0 1 74 328 A 24 24 0 0 1 98 352 Z" fill="url(#gradBottom)"/>
+    <!-- Sombra del pliegue -->
+    <path d="M 98 462 L 50 414 A 48 48 0 0 1 98 414 A 48 48 0 0 1 98 462 Z" fill="rgba(0, 0, 0, 0.15)" transform="translate(1, -2)"/>
+    <!-- Pliegue doblado -->
+    <path d="M 98 462 L 50 414 A 48 48 0 0 1 98 414 A 48 48 0 0 1 98 462 Z" fill="url(#flapGradBottom)"/>
+  </g>
+
+  <!-- ── SOPORTE: INFERIOR DERECHO (BR) ── -->
+  <g>
+    <!-- Base -->
+    <path d="M 414 414 L 352 414 A 24 24 0 0 0 328 438 A 24 24 0 0 0 352 462 L 414 462 A 48 48 0 0 0 462 414 L 462 352 A 24 24 0 0 0 438 328 A 24 24 0 0 0 414 352 Z" fill="url(#gradBottom)"/>
+    <!-- Sombra del pliegue -->
+    <path d="M 462 414 L 414 462 A 48 48 0 0 1 414 414 A 48 48 0 0 1 462 414 Z" fill="rgba(0, 0, 0, 0.15)" transform="translate(-1, -2)"/>
+    <!-- Pliegue doblado -->
+    <path d="M 462 414 L 414 462 A 48 48 0 0 1 414 414 A 48 48 0 0 1 462 414 Z" fill="url(#flapGradBottom)"/>
+  </g>
+
+  <!-- ── LETRA 'A' CENTRAL ── -->
+  <path d="M 230 150 L 282 150 L 370 340 L 316 340 L 295 290 L 217 290 L 196 340 L 142 340 Z M 256 185 L 282 250 L 230 250 Z" fill="#0072ff" filter="url(#softShadow)"/>
 </svg>
